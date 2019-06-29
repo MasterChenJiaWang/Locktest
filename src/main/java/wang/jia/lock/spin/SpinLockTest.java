@@ -1,5 +1,7 @@
 package wang.jia.lock.spin;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -10,13 +12,14 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class SpinLockTest {
 
-
+    private volatile Map<Object, Object> objectObjectConcurrentHashMap = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
 
+
         SpinLockTest myLock = new SpinLockTest();
 
-        new Thread(()->{
+        new Thread(() -> {
             myLock.addLock();
             //
             try {
@@ -26,7 +29,7 @@ public class SpinLockTest {
                 e.printStackTrace();
             }
             myLock.unLock();
-        },"线程AA").start();
+        }, "线程AA").start();
         //
         try {
             System.out.println("AAAA 线程MAIN     暂停2秒");
@@ -35,7 +38,7 @@ public class SpinLockTest {
             e.printStackTrace();
         }
 
-        new Thread(()->{
+        new Thread(() -> {
             myLock.addLock();
 //            //
 //            System.out.println("线程bbbbbb  我获得锁了！@！@");
@@ -46,7 +49,7 @@ public class SpinLockTest {
 //                e.printStackTrace();
 //            }
             myLock.unLock();
-        },"线程bbbbbb").start();
+        }, "线程bbbbbb").start();
     }
 
 
@@ -54,21 +57,23 @@ public class SpinLockTest {
     AtomicReference<Thread> threadAtomicReference = new AtomicReference<>();
 
     public void addLock() {
-        Thread thread =Thread.currentThread();
-        System.out.println(Thread.currentThread().getName()+": ++++++添加锁");
+        Thread thread = Thread.currentThread();
+        System.out.println(Thread.currentThread().getName() + ": ++++++添加锁");
         while (!threadAtomicReference.compareAndSet(null, thread)) {
 //            System.out.println(Thread.currentThread().getName()+"： 呜呜 其他线程先进来了，锁不是我的，我要循环等待获取 锁");
         }
 
+
     }
 
-    public void unLock(){
+    public void unLock() {
         // 当前线程
-        Thread thread =Thread.currentThread();
-        System.out.println(Thread.currentThread().getName()+": 唉 我准备释放锁了");
+        Thread thread = Thread.currentThread();
+        System.out.println(Thread.currentThread().getName() + ": 唉 我准备释放锁了");
         // 释放当前线程锁
-        threadAtomicReference.compareAndSet(thread,null);
-        System.out.println(Thread.currentThread().getName()+":--------- 释放锁");
+        threadAtomicReference.compareAndSet(thread, null);
+        System.out.println(Thread.currentThread().getName() + ":--------- 释放锁");
+
     }
 
 }
