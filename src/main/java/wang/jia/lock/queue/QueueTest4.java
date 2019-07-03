@@ -52,12 +52,42 @@ public class QueueTest4 {
         private Condition c2 = reentrantLock.newCondition();
         private Condition c3 = reentrantLock.newCondition();
         // 1 =a 2 =b 3 =c
-        private Integer number = 1;
+        private volatile Integer number = 1;
 
         private void print() throws Exception {
-            print5();
-            print10();
-            print15();
+//            reentrantLock.lock();
+//            try {
+//                if(number==1){
+//                    c2.await();
+//                    c3.await();
+//                    for (int i = 1; i <= 5; i++) {
+//                        System.out.println(Thread.currentThread().getName() + ">>>>>" + i);
+//                    }
+//                    number = 2;
+//                    c2.signal();
+//                }else  if(number==2){
+//                    c1.await();
+//                    c3.await();
+//                    for (int i = 1; i <= 10; i++) {
+//                        System.out.println(Thread.currentThread().getName() + "    <<<< \n" + i);
+//                    }
+//                    number = 3;
+//                    c3.signal();
+//                }else  if(number==3){
+//                    c1.await();
+//                    c2.await();
+//                    for (int i = 1; i <= 15; i++) {
+//                        System.out.println(Thread.currentThread().getName() + "    +++++++++++++++ \n" + i);
+//                    }
+//                    number = 1;
+//                    c1.signal();
+//                }
+//
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } finally {
+//                reentrantLock.unlock();
+//            }
         }
 
         private void print5() throws Exception {
